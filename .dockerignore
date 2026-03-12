@@ -1,0 +1,23 @@
+# Dependencies and local env
+node_modules
+backend/venv
+backend/.venv
+frontend/dist
+
+# Git and IDE
+.git
+.idea
+.vscode
+
+# Docs and scripts (not needed in image)
+*.md
+frontend
+Project Structure
+Requirements
+Tech Design
+TestPlans
+
+# Python
+__pycache__
+*.pyc
+.env
