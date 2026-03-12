@@ -4,8 +4,8 @@ import { LogIn, User } from 'lucide-react';
 
 const Login = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = [useState('admin')];
-  const [password, setPassword] = [useState('password')];
+  const [username, setUsername] = useState('admin');
+  const [password, setPassword] = useState('password');
 
   const handleLogin = (e) => {
     e.preventDefault();
