@@ -1,0 +1,5 @@
+# Student Performance Tracker – Cursor rules
+
+- Use concise commit messages. Do not append "Made-with: Cursor" or similar tags to commit messages.
+- Backend: FastAPI in `backend/`. Frontend: React + Vite in `frontend/`.
+- API base URL for frontend: use `import.meta.env.VITE_API_URL` with fallback `http://localhost:8000`; production build uses `frontend/.env.production`.

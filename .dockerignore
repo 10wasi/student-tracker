@@ -11,7 +11,7 @@ frontend/dist
 
 # Docs and scripts (not needed in image)
 *.md
-frontend
+frontend/node_modules
 Project Structure
 Requirements
 Tech Design
