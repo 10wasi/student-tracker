@@ -143,11 +143,13 @@ if os.path.isdir(STATIC_DIR):
     @app.get("/{full_path:path}")
     def serve_spa(full_path: str):
         # Don't serve SPA for API or OpenAPI routes
-        if full_path.startswith("api/") or full_path in ("docs", "openapi.json") or full_path.startswith("docs/") or full_path.startswith("redoc"):
+        if (full_path == "api" or full_path.startswith("api/") or
+            full_path in ("docs", "openapi.json") or
+            full_path.startswith("docs/") or full_path.startswith("redoc")):
             raise HTTPException(status_code=404, detail="Not found")
         index_path = os.path.join(STATIC_DIR, "index.html")
         if os.path.isfile(index_path):
-            return FileResponse(index_path)
+            return FileResponse(index_path, media_type="text/html")
         raise HTTPException(status_code=404, detail="Not found")
 
 if __name__ == "__main__":

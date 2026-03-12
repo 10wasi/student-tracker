@@ -3,7 +3,7 @@ import axios from 'axios';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { AlertCircle, Brain, BookOpen, GraduationCap, TrendingUp, Search } from 'lucide-react';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:8000').replace(/\/$/, '');
 
 const Dashboard = () => {
   const [students, setStudents] = useState([]);
@@ -11,10 +11,12 @@ const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isStudentModalOpen, setIsStudentModalOpen] = useState(false);
   const [isGradeModalOpen, setIsGradeModalOpen] = useState(false);
+  const [apiError, setApiError] = useState(null);
   
   // Combine fetching logic
   const fetchData = async () => {
     try {
+      setApiError(null);
       const [studentsRes, insightsRes] = await Promise.all([
         axios.get(`${API_BASE}/students`),
         axios.get(`${API_BASE}/insights`)
@@ -36,6 +38,7 @@ const Dashboard = () => {
       setInsights(insightsRes.data);
     } catch (error) {
       console.error("Error fetching data:", error);
+      setApiError(error.response?.status === 404 ? "API not found. Check the server URL." : "Failed to load data. Please try again.");
     }
   };
 
@@ -87,7 +90,12 @@ const Dashboard = () => {
       </nav>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        
+        {apiError && (
+          <div className="mb-6 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg flex items-center justify-between">
+            <span>{apiError}</span>
+            <button onClick={() => setApiError(null)} className="text-red-600 hover:text-red-800 font-medium">Dismiss</button>
+          </div>
+        )}
         {/* Top Section: Quick Stats & AI Insights */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           
