@@ -10,11 +10,11 @@ import uuid
 
 app = FastAPI(title="Student Performance Tracker API")
 
-# Setup CORS to allow React frontend
+# Setup CORS (allow_credentials=False when using "*" per spec; avoids browser rejection)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -73,6 +73,11 @@ initialize_data()
 @api.get("/")
 def read_root():
     return {"message": "Welcome to Student Performance Tracker API"}
+
+@api.get("/health")
+def health():
+    """Health check for deployment (Railway, load balancers)."""
+    return {"status": "ok"}
 
 @api.post("/students", response_model=Student)
 def create_student(student: StudentBase):
@@ -144,7 +149,7 @@ if os.path.isdir(STATIC_DIR):
     def serve_spa(full_path: str):
         # Don't serve SPA for API or OpenAPI routes
         if (full_path == "api" or full_path.startswith("api/") or
-            full_path in ("docs", "openapi.json") or
+            full_path in ("docs", "openapi.json", "health") or
             full_path.startswith("docs/") or full_path.startswith("redoc")):
             raise HTTPException(status_code=404, detail="Not found")
         index_path = os.path.join(STATIC_DIR, "index.html")
@@ -154,5 +159,5 @@ if os.path.isdir(STATIC_DIR):
 
 if __name__ == "__main__":
     import uvicorn
-    port = int(os.environ.get("PORT", 8000))
+    port = int(os.environ.get("PORT") or 8000)
     uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
